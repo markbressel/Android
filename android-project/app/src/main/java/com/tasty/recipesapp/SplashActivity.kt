@@ -2,6 +2,8 @@ package com.tasty.recipesapp
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -39,22 +41,23 @@ class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.i("SplashActivity", "onCreate")
+
         enableEdgeToEdge()
+
         val binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.startButton.setOnClickListener{
-            Log.i("SplashActivity", "startButton clicked")
-            val intent = Intent(this, MainActivity::class.java)
-            intent.putExtra("message", "Hello from Splash!")
-            startActivity(intent)
-            finish()
-        }
-        //setContentView(R.layout.activity_splash)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            Log.i("SplashActivity", "Navigating to MainActivity")
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+        }, 3000)
     }
 }
