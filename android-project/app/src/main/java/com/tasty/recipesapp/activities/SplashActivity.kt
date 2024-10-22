@@ -1,4 +1,4 @@
-package com.tasty.recipesapp
+package com.tasty.recipesapp.activities
 
 import android.content.Intent
 import android.os.Bundle
@@ -9,6 +9,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.tasty.recipesapp.R
 import com.tasty.recipesapp.databinding.ActivitySplashBinding
 
 class SplashActivity : AppCompatActivity() {
