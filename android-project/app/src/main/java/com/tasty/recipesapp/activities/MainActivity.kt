@@ -1,28 +1,62 @@
 package com.tasty.recipesapp.activities
 
-import androidx.appcompat.app.AppCompatActivity
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import androidx.navigation.NavController
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.setupWithNavController
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.tasty.recipesapp.R
+import com.tasty.recipesapp.ui.home.HomeFragment
+import com.tasty.recipesapp.ui.profile.ProfileFragment
+import com.tasty.recipesapp.ui.recipe.RecipesFragment
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var navController: NavController
+    private lateinit var menuTitle: TextView
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val navHostFragment = supportFragmentManager
-            .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        navController = navHostFragment.navController
+        menuTitle = findViewById(R.id.menuTitle)
+        menuTitle.text = "Home"
+        menuTitle.setTextColor(android.graphics.Color.WHITE)
 
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
-        bottomNavigationView.setupWithNavController(navController)
+
+        loadFragment(HomeFragment())
+
+        bottomNavigationView.setOnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.homeFragment -> {
+                    updateMenuTitle("Home")
+                    loadFragment(HomeFragment())
+                }
+                R.id.recipesFragment -> {
+                    updateMenuTitle("Recipes")
+                    loadFragment(RecipesFragment())
+                }
+                R.id.profileFragment -> {
+                    updateMenuTitle("Profile")
+                    loadFragment(ProfileFragment())
+                }
+            }
+            true
+        }
+    }
+
+    private fun loadFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .commit()
+    }
+
+    private fun updateMenuTitle(title: String) {
+        menuTitle.text = title
+        menuTitle.setTextColor(android.graphics.Color.WHITE)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -32,9 +66,18 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.homeFragment -> navController.navigate(R.id.homeFragment)
-            R.id.recipesFragment -> navController.navigate(R.id.recipesFragment)
-            R.id.profileFragment -> navController.navigate(R.id.profileFragment)
+            R.id.homeFragment -> {
+                updateMenuTitle("Home")
+                loadFragment(HomeFragment())
+            }
+            R.id.recipesFragment -> {
+                updateMenuTitle("Recipes")
+                loadFragment(RecipesFragment())
+            }
+            R.id.profileFragment -> {
+                updateMenuTitle("Profile")
+                loadFragment(ProfileFragment())
+            }
         }
         return super.onOptionsItemSelected(item)
     }

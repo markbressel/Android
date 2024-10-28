@@ -1,8 +1,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+    <!-- Alap alkalmazás téma. -->
     <style name="Base.Theme.RecipesApp" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <!-- Alkalmazás alapértelmezett színei -->
+        <item name="colorPrimary">@color/black</item>
     </style>
 
     <style name="Theme.RecipesApp" parent="Base.Theme.RecipesApp"/>

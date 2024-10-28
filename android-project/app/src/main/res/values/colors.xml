@@ -2,8 +2,9 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="bottom_nav_icon_color">#FF6200EE</color> <!-- Aktív ikon szín -->
-    <color name="bottom_nav_text_color">#FF6200EE</color> <!-- Aktív szöveg szín -->
+    <color name="bottom_nav_icon_color">#FF000000</color> <!-- Aktív ikon szín -->
+    <color name="bottom_nav_text_color">#FF000000</color> <!-- Aktív szöveg szín -->
     <color name="bottom_nav_inactive_icon">#A3A3A3</color> <!-- Inaktív ikon szín -->
     <color name="bottom_nav_inactive_text">#A3A3A3</color> <!-- Inaktív szöveg szín -->
+    <color name="secondaryColor">#FFFF00</color> <!-- Sárga -->
 </resources>
