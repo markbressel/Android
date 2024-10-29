@@ -1,0 +1,273 @@
+{
+  "recipes": [
+    {
+      "recipeID": 1,
+      "name": "One-Pot Lemon Garlic Shrimp Pasta",
+      "description": "This easy 30-minute pasta recipe transforms ingredients that you already have in your kitchen into a posh, seafood dish you'll want to serve at your next dinner party. And since the whole dish is made in a single pot, clean-up is easy. Don't be surprised if this becomes your favorite quick go-to.",
+      "thumbnailUrl": "https://img.buzzfeed.com/video-api-prod/assets/9ee2dadcbfcb4095872e6cdbaa24ff14/Thumb_A_FB.jpg",
+      "keywords": "pasta, shrimp, lemon, garlic",
+      "isPublic": false,
+      "userEmail": "someone@gmail.com",
+      "originalVideoUrl": "https://s3.amazonaws.com/video-api-prod/assets/3de913d586424e189521e13eeee0222d/BFV10181_One-Pot_Lemon_Garlic_Shrimp_Pasta_FB1080SQ.mp4",
+      "country": "US",
+      "numServings": 4,
+      "components": [
+        {
+          "rawText": "8 oz linguine",
+          "extraComment": "",
+          "ingredient": {
+            "name": "linguine"
+          },
+          "measurement": {
+            "quantity": "8",
+            "unit": {
+              "name": "ounce",
+              "displaySingular": "oz",
+              "displayPlural": "oz",
+              "abbreviation": "oz"
+            }
+          },
+          "position": 1
+        }
+      ],
+      "instructions": [
+        {
+          "instructionID": 11,
+          "displayText": "In a large pot, boil water and add pasta. Cook (stirring frequently) until al dente.",
+          "position": 1
+        }
+      ],
+      "nutrition": {
+        "calories": 567,
+        "protein": 31,
+        "fat": 28,
+        "carbohydrates": 44,
+        "sugar": 1,
+        "fiber": 2
+      }
+    },
+    {
+      "recipeID": 2,
+      "name": "Classic Margherita Pizza",
+      "description": "A traditional Neapolitan pizza with fresh mozzarella, tomatoes, and basil. This simple yet delicious pizza captures the colors of the Italian flag and the essence of Italian cooking.",
+      "thumbnailUrl": "https://example.com/margherita.jpg",
+      "keywords": "pizza, Italian, vegetarian, tomato, cheese",
+      "isPublic": true,
+      "userEmail": "chef@gmail.com",
+      "originalVideoUrl": "https://example.com/margherita-video.mp4",
+      "country": "IT",
+      "numServings": 2,
+      "components": [
+        {
+          "rawText": "250g pizza dough",
+          "extraComment": "room temperature",
+          "ingredient": {
+            "name": "pizza dough"
+          },
+          "measurement": {
+            "quantity": "250",
+            "unit": {
+              "name": "gram",
+              "displaySingular": "g",
+              "displayPlural": "g",
+              "abbreviation": "g"
+            }
+          },
+          "position": 1
+        }
+      ],
+      "instructions": [
+        {
+          "instructionID": 21,
+          "displayText": "Preheat your oven to 500°F (260°C) with a pizza stone inside.",
+          "position": 1
+        }
+      ],
+      "nutrition": {
+        "calories": 450,
+        "protein": 18,
+        "fat": 15,
+        "carbohydrates": 62,
+        "sugar": 4,
+        "fiber": 3
+      }
+    },
+    {
+      "recipeID": 3,
+      "name": "Chocolate Chip Cookies",
+      "description": "Soft and chewy chocolate chip cookies that are golden brown on the outside and gooey on the inside. Perfect with a glass of cold milk!",
+      "thumbnailUrl": "https://example.com/cookies.jpg",
+      "keywords": "dessert, cookies, chocolate, baking",
+      "isPublic": true,
+      "userEmail": "baker@gmail.com",
+      "originalVideoUrl": "https://example.com/cookie-video.mp4",
+      "country": "US",
+      "numServings": 24,
+      "components": [
+        {
+          "rawText": "2 1/4 cups all-purpose flour",
+          "extraComment": "sifted",
+          "ingredient": {
+            "name": "all-purpose flour"
+          },
+          "measurement": {
+            "quantity": "2.25",
+            "unit": {
+              "name": "cup",
+              "displaySingular": "cup",
+              "displayPlural": "cups",
+              "abbreviation": "c"
+            }
+          },
+          "position": 1
+        }
+      ],
+      "instructions": [
+        {
+          "instructionID": 31,
+          "displayText": "Preheat oven to 375°F (190°C) and line baking sheets with parchment paper.",
+          "position": 1
+        }
+      ],
+      "nutrition": {
+        "calories": 150,
+        "protein": 2,
+        "fat": 7,
+        "carbohydrates": 20,
+        "sugar": 12,
+        "fiber": 1
+      }
+    },
+    {
+      "recipeID": 4,
+      "name": "Vegetable Stir Fry",
+      "description": "A quick and healthy stir fry loaded with colorful vegetables and a savory sauce. Perfect for a weeknight dinner.",
+      "thumbnailUrl": "https://example.com/stirfry.jpg",
+      "keywords": "stir fry, vegetables, quick, healthy",
+      "isPublic": true,
+      "userEmail": "veggiechef@gmail.com",
+      "originalVideoUrl": "https://example.com/stirfry-video.mp4",
+      "country": "CN",
+      "numServings": 4,
+      "components": [
+        {
+          "rawText": "2 cups broccoli florets",
+          "extraComment": "",
+          "ingredient": {
+            "name": "broccoli"
+          },
+          "measurement": {
+            "quantity": "2",
+            "unit": {
+              "name": "cup",
+              "displaySingular": "cup",
+              "displayPlural": "cups",
+              "abbreviation": "c"
+            }
+          },
+          "position": 1
+        },
+        {
+          "rawText": "1 cup bell peppers, sliced",
+          "extraComment": "",
+          "ingredient": {
+            "name": "bell peppers"
+          },
+          "measurement": {
+            "quantity": "1",
+            "unit": {
+              "name": "cup",
+              "displaySingular": "cup",
+              "displayPlural": "cups",
+              "abbreviation": "c"
+            }
+          },
+          "position": 2
+        }
+      ],
+      "instructions": [
+        {
+          "instructionID": 41,
+          "displayText": "In a large pan, heat oil over medium-high heat. Add vegetables and stir-fry for 5-7 minutes.",
+          "position": 1
+        },
+        {
+          "instructionID": 42,
+          "displayText": "Add soy sauce and sesame seeds, cook for another 2 minutes.",
+          "position": 2
+        }
+      ],
+      "nutrition": {
+        "calories": 200,
+        "protein": 5,
+        "fat": 10,
+        "carbohydrates": 25,
+        "sugar": 5,
+        "fiber": 4
+      }
+    },
+    {
+      "recipeID": 5,
+      "name": "Banana Bread",
+      "description": "A moist and flavorful banana bread recipe that’s easy to make and perfect for breakfast or a snack.",
+      "thumbnailUrl": "https://example.com/bananabread.jpg",
+      "keywords": "bread, banana, baking, snack",
+      "isPublic": true,
+      "userEmail": "homebaker@gmail.com",
+      "originalVideoUrl": "https://example.com/bananabread-video.mp4",
+      "country": "US",
+      "numServings": 10,
+      "components": [
+        {
+          "rawText": "3 ripe bananas, mashed",
+          "extraComment": "",
+          "ingredient": {
+            "name": "bananas"
+          },
+          "measurement": {
+            "quantity": "3",
+            "unit": {
+              "name": "whole",
+              "displaySingular": "banana",
+              "displayPlural": "bananas",
+              "abbreviation": "n/a"
+            }
+          },
+          "position": 1
+        },
+        {
+          "rawText": "1/2 cup sugar",
+          "extraComment": "",
+          "ingredient": {
+            "name": "sugar"
+          },
+          "measurement": {
+            "quantity": "0.5",
+            "unit": {
+              "name": "cup",
+              "displaySingular": "cup",
+              "displayPlural": "cups",
+              "abbreviation": "c"
+            }
+          },
+          "position": 2
+        }
+      ],
+      "instructions": [
+        {
+          "instructionID": 51,
+          "displayText": "Preheat oven to 350°F (175°C) and grease a loaf pan.",
+          "position": 1
+        }
+      ],
+      "nutrition": {
+        "calories": 250,
+        "protein": 4,
+        "fat": 10,
+        "carbohydrates": 38,
+        "sugar": 15,
+        "fiber": 2
+      }
+    }
+  ]
+}
