@@ -63,7 +63,7 @@ class RecipeDetailFragment : Fragment() {
             Log.d("RecipeDetailFragment", "Recipe details displayed")
         } catch (e: Exception) {
             Log.e("RecipeDetailFragment", "Error displaying recipe: ${e.message}")
-            e.printStackTrace() // Add this to get full error details
+            e.printStackTrace()
         }
     }
 

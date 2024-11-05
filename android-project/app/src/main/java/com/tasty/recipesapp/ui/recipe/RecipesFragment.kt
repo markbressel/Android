@@ -1,7 +1,6 @@
 package com.tasty.recipesapp.ui.recipe
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -9,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.tasty.recipesapp.R
 import com.tasty.recipesapp.adapter.RecipeAdapter
 import com.tasty.recipesapp.databinding.FragmentRecipesBinding
 import com.tasty.recipesapp.viewmodel.RecipeListViewModel
@@ -35,25 +33,7 @@ class RecipesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupRecyclerView()
-        setupRandomButton()
         observeViewModel()
-
-        binding.showRecipesButton.setOnClickListener {
-            Log.d("RecipesFragment", "Show Recipes button clicked")
-            viewModel.loadRecipes()
-        }
-    }
-
-    private fun setupRandomButton() {
-        binding.randomRecipeButton.setOnClickListener {
-            viewModel.selectRandomRecipe()
-            val recipeDetailFragment = RecipeDetailFragment()
-
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, recipeDetailFragment)
-                .addToBackStack(null) // Vissza lépéshez
-                .commit()
-        }
     }
 
     private fun setupRecyclerView() {

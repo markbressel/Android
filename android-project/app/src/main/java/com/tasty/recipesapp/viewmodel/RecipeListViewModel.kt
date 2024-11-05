@@ -1,7 +1,6 @@
 package com.tasty.recipesapp.viewmodel
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -30,7 +29,7 @@ class RecipeListViewModel(application: Application) : AndroidViewModel(applicati
     val error: LiveData<String?> = _error
 
     init {
-
+        loadRecipes()
     }
 
     fun loadRecipes() {
@@ -48,17 +47,5 @@ class RecipeListViewModel(application: Application) : AndroidViewModel(applicati
                 _isLoading.value = false
             }
         }
-    }
-
-    fun selectRandomRecipe() {
-        _recipes.value?.let { recipeList ->
-            if (recipeList.isNotEmpty()) {
-                val random = recipeList.random()
-                Log.d("ViewModel", "Selected random recipe: ${random.name}")
-                _randomRecipe.postValue(random) // Change to postValue
-            } else {
-                Log.e("ViewModel", "Recipe list is empty")
-            }
-        } ?: Log.e("ViewModel", "Recipe list is null")
     }
 }
