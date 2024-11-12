@@ -1,5 +1,7 @@
 package com.tasty.recipesapp.adapter
 
+import android.annotation.SuppressLint
+import android.util.Log
 import com.tasty.recipesapp.models.RecipeModel
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -13,12 +15,14 @@ class RecipeAdapter(
     private val onItemClick: (RecipeModel) -> Unit
 ) : RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder>() {
 
+    @SuppressLint("NotifyDataSetChanged")
     fun updateRecipes(newRecipes: List<RecipeModel>) {
         recipes = newRecipes
         notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecipeViewHolder {
+        Log.d("RecipeAdapter", "onCreateViewHolder")
         val binding = inflate(
             LayoutInflater.from(parent.context),
             parent,
@@ -28,6 +32,7 @@ class RecipeAdapter(
     }
 
     override fun onBindViewHolder(holder: RecipeViewHolder, position: Int) {
+        Log.d("RecipeAdapter", "onBindViewHolder")
         holder.bind(recipes[position])
     }
 

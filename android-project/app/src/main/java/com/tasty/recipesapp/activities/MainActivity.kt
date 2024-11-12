@@ -7,6 +7,8 @@ import android.view.MenuItem
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.NavigationUI.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.tasty.recipesapp.R
 import com.tasty.recipesapp.ui.home.HomeFragment
@@ -25,23 +27,29 @@ class MainActivity : AppCompatActivity() {
         menuTitle.text = "Home"
         menuTitle.setTextColor(android.graphics.Color.WHITE)
 
-        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
 
-        loadFragment(HomeFragment())
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragment_container) as NavHostFragment
+        val navController = navHostFragment.navController
+
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        setupWithNavController(bottomNavigationView, navController)
 
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.homeFragment -> {
                     updateMenuTitle("Home")
-                    loadFragment(HomeFragment())
+                    //loadFragment(HomeFragment())
+                    navController.navigate(R.id.homeFragment)
                 }
                 R.id.recipesFragment -> {
                     updateMenuTitle("Recipes")
-                    loadFragment(RecipesFragment())
+                    //loadFragment(RecipesFragment())
+                    navController.navigate(R.id.recipesFragment)
                 }
                 R.id.profileFragment -> {
                     updateMenuTitle("Profile")
-                    loadFragment(ProfileFragment())
+                    //loadFragment(ProfileFragment())
+                    navController.navigate(R.id.profileFragment)
                 }
             }
             true
