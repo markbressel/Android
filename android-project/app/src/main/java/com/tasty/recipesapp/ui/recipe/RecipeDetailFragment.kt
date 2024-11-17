@@ -1,12 +1,14 @@
 package com.tasty.recipesapp.ui.recipe
 
 import android.annotation.SuppressLint
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.MediaController
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
@@ -67,17 +69,18 @@ class RecipeDetailFragment : Fragment() {
                     "${it.position}. ${it.text}"
                 }
 
-                // Használjuk a fragment kontextust a Glide-hoz
-                Glide.with(requireContext())  // A helyes kontextus megadása
+                Glide.with(requireContext())
                     .load(recipe.thumbnailUrl)
                     .into(recipeImageView)
             }
             Log.d("RecipeDetailFragment", "Recipe details displayed")
         } catch (e: Exception) {
             Log.e("RecipeDetailFragment", "Error displaying recipe: ${e.message}")
-            e.printStackTrace() // Add this to get full error details
+            e.printStackTrace()
         }
     }
+
+
 
 
     override fun onDestroyView() {

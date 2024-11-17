@@ -11,24 +11,28 @@
         android:layout_height="wrap_content"
         android:padding="16dp">
 
+        <!-- Recipe Title -->
         <TextView
             android:id="@+id/titleText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="24sp"
             android:textStyle="bold"
-            android:textColor="@android:color/black"
+            android:textColor="@android:color/white"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="Recipe Name"/>
+            tools:text="Recipe Name" />
 
+        <!-- Recipe Description -->
         <TextView
             android:id="@+id/descriptionText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:textColor="@android:color/holo_green_light"
             app:layout_constraintTop_toBottomOf="@id/titleText"
-            tools:text="Recipe description"/>
+            tools:text="Recipe description" />
 
+        <!-- Nutrition Title -->
         <TextView
             android:id="@+id/nutritionTitle"
             android:layout_width="match_parent"
@@ -37,16 +41,19 @@
             android:text="Nutrition Information"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:textColor="@android:color/black"
-            app:layout_constraintTop_toBottomOf="@id/descriptionText"/>
+            android:textColor="@android:color/white"
+            app:layout_constraintTop_toBottomOf="@id/descriptionText" />
 
+        <!-- Nutrition Information -->
         <TextView
             android:id="@+id/nutritionText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@id/nutritionTitle"/>
+            android:textColor="@android:color/holo_green_light"
+            app:layout_constraintTop_toBottomOf="@id/nutritionTitle" />
 
+        <!-- Ingredients Title -->
         <TextView
             android:id="@+id/ingredientsTitle"
             android:layout_width="match_parent"
@@ -55,16 +62,19 @@
             android:text="Ingredients"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:textColor="@android:color/black"
-            app:layout_constraintTop_toBottomOf="@id/nutritionText"/>
+            android:textColor="@android:color/white"
+            app:layout_constraintTop_toBottomOf="@id/nutritionText" />
 
+        <!-- Ingredients -->
         <TextView
             android:id="@+id/ingredientsText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@id/ingredientsTitle"/>
+            android:textColor="@android:color/holo_green_light"
+            app:layout_constraintTop_toBottomOf="@id/ingredientsTitle" />
 
+        <!-- Instructions Title -->
         <TextView
             android:id="@+id/instructionsTitle"
             android:layout_width="match_parent"
@@ -73,29 +83,33 @@
             android:text="Instructions"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:textColor="@android:color/black"
-            app:layout_constraintTop_toBottomOf="@id/ingredientsText"/>
+            android:textColor="@android:color/white"
+            app:layout_constraintTop_toBottomOf="@id/ingredientsText" />
 
-        <!-- Recept kép, amely most megfelelően igazodik -->
-        <ImageView
-            android:id="@+id/recipeImageView"
-            android:layout_width="0dp"
-            android:layout_height="200dp"
-            app:layout_constraintTop_toBottomOf="@id/instructionsTitle"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="16dp"
-            android:scaleType="centerCrop"
-            android:contentDescription="@string/recipe_image" />
-
+        <!-- Instructions -->
         <TextView
             android:id="@+id/instructionsText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@id/recipeImageView"
+            android:textColor="@android:color/holo_green_light"
+            app:layout_constraintTop_toBottomOf="@id/instructionsTitle"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="Instructions go here." />
+
+        <!-- Recipe Image -->
+        <ImageView
+            android:id="@+id/recipeImageView"
+            android:layout_width="0dp"
+            android:layout_height="200dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@id/instructionsText"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:scaleType="centerCrop"
+            android:contentDescription="@string/recipe_image" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
