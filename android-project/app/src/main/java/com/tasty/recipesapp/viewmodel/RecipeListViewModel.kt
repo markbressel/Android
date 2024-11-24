@@ -6,8 +6,9 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.tasty.recipesapp.Respository.RecipeRepository
+import com.tasty.recipesapp.database.RecipeDatabase
 import com.tasty.recipesapp.models.RecipeModel
+import com.tasty.recipesapp.repository.RecipeRepository
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -15,13 +16,24 @@ import kotlinx.coroutines.withContext
 
 class RecipeListViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository = RecipeRepository(application)
+    private val repository = RecipeRepository(
+        application,
+        RecipeDatabase.getDatabase(application).recipeDao()
+    )
 
+    // For recipes from JSON
     private val _recipes = MutableLiveData<List<RecipeModel>>()
     val recipes: LiveData<List<RecipeModel>> = _recipes
 
+    // For user's local recipes
+    private val _localRecipes = MutableLiveData<List<RecipeModel>>()
+    val localRecipes: LiveData<List<RecipeModel>> = _localRecipes
+
     private val _randomRecipe = MutableLiveData<RecipeModel>()
     val randomRecipe: LiveData<RecipeModel> = _randomRecipe
+
+    private val _selectedRecipe = MutableLiveData<RecipeModel>()
+    val selectedRecipe: LiveData<RecipeModel> = _selectedRecipe
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
@@ -29,12 +41,9 @@ class RecipeListViewModel(application: Application) : AndroidViewModel(applicati
     private val _error = MutableLiveData<String?>()
     val error: LiveData<String?> = _error
 
-    //for selected recipe
-    private val _selectedRecipe = MutableLiveData<RecipeModel>()
-    val selectedRecipe: LiveData<RecipeModel> = _selectedRecipe
-
     init {
         loadRecipes()
+        loadLocalRecipes()
     }
 
     private fun loadRecipes() {
@@ -45,8 +54,10 @@ class RecipeListViewModel(application: Application) : AndroidViewModel(applicati
                 val recipeList = withContext(Dispatchers.IO) {
                     repository.getAllRecipes()
                 }
+                Log.d("RecipeListViewModel", "Loaded ${recipeList.size} recipes")
                 _recipes.value = recipeList
             } catch (e: Exception) {
+                Log.e("RecipeListViewModel", "Error loading recipes", e)
                 _error.value = "Failed to load recipes: ${e.message}"
             } finally {
                 _isLoading.value = false
@@ -54,20 +65,38 @@ class RecipeListViewModel(application: Application) : AndroidViewModel(applicati
         }
     }
 
-    //fun to get recipe by id
+    private fun loadLocalRecipes() {
+        viewModelScope.launch {
+            try {
+                val recipes = withContext(Dispatchers.IO) {
+                    repository.getAllLocalRecipes()
+                }
+                _localRecipes.value = recipes
+            } catch (e: Exception) {
+                _error.value = "Failed to load local recipes: ${e.message}"
+            }
+        }
+    }
+
     fun getRecipeById(recipeId: Int) {
         viewModelScope.launch {
             try {
                 _isLoading.value = true
                 _error.value = null
 
-                // Find recipe from current list first
+                // Check local recipes first
+                _localRecipes.value?.find { it.id == recipeId }?.let { recipe ->
+                    _selectedRecipe.value = recipe
+                    return@launch
+                }
+
+                // Then check JSON recipes
                 _recipes.value?.find { it.id == recipeId }?.let { recipe ->
                     _selectedRecipe.value = recipe
                     return@launch
                 }
 
-                // If not found in current list, load from repository
+                // If not found in current lists, try loading from repository
                 val recipeList = withContext(Dispatchers.IO) {
                     repository.getAllRecipes()
                 }
@@ -82,6 +111,41 @@ class RecipeListViewModel(application: Application) : AndroidViewModel(applicati
                 _error.value = "Failed to load recipe: ${e.message}"
             } finally {
                 _isLoading.value = false
+            }
+        }
+    }
+
+    fun selectRandomRecipe() {
+        _recipes.value?.let { recipeList ->
+            if (recipeList.isNotEmpty()) {
+                val random = recipeList.random()
+                Log.d("ViewModel", "Selected random recipe: ${random.name}")
+                _randomRecipe.postValue(random)
+            } else {
+                Log.e("ViewModel", "Recipe list is empty")
+            }
+        } ?: Log.e("ViewModel", "Recipe list is null")
+    }
+
+    // Functions for handling local recipes
+    fun saveRecipeFun(recipe: RecipeModel) {
+        viewModelScope.launch {
+            try {
+                repository.insertRecipe(recipe)
+                loadLocalRecipes() // Reload local recipes
+            } catch (e: Exception) {
+                _error.value = "Failed to save recipe: ${e.message}"
+            }
+        }
+    }
+
+    fun deleteRecipe(recipe: RecipeModel) {
+        viewModelScope.launch {
+            try {
+                repository.deleteRecipe(recipe)
+                loadLocalRecipes() // Reload local recipes
+            } catch (e: Exception) {
+                _error.value = "Failed to delete recipe: ${e.message}"
             }
         }
     }

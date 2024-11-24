@@ -9,6 +9,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.tasty.recipesapp.R
 import com.tasty.recipesapp.adapter.RecipeAdapter
 import com.tasty.recipesapp.databinding.FragmentRecipesBinding
 import com.tasty.recipesapp.viewmodel.RecipeListViewModel
@@ -33,14 +35,21 @@ class RecipesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val fabAddRecipe = view.findViewById<FloatingActionButton>(R.id.fab_add_recipe)
+
+        // Kattintási esemény beállítása
+        fabAddRecipe.setOnClickListener {
+            // Navigálás a RecipesFragment-ből a NewRecipeFragment-re
+            findNavController().navigate(R.id.action_recipesFragment_to_newRecipeFragment)
+        }
+
         setupRecyclerView()
         observeViewModel()
     }
 
     private fun setupRecyclerView() {
         recipeAdapter = RecipeAdapter { recipe ->
-            // nav based on id
-
+            // Navigálás a recept részletekhez
             val directions = RecipesFragmentDirections
                 .actionRecipesFragmentToRecipeDetailFragment(recipeId = recipe.id)
             findNavController().navigate(directions)
@@ -53,14 +62,17 @@ class RecipesFragment : Fragment() {
     }
 
     private fun observeViewModel() {
+        // Az összes recept figyelése
         viewModel.recipes.observe(viewLifecycleOwner) { recipes ->
-            recipeAdapter.updateRecipes(recipes)
+            recipeAdapter.updateRecipes(recipes)  // Frissíti az adaptert az új listával
         }
 
+        // Betöltési indikátor figyelése
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
             binding.loadingIndicator.visibility = if (isLoading) View.VISIBLE else View.GONE
         }
 
+        // Hibák kezelése
         viewModel.error.observe(viewLifecycleOwner) { error ->
             error?.let {
                 Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()

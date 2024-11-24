@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
@@ -14,9 +15,11 @@ import com.tasty.recipesapp.R
 import com.tasty.recipesapp.ui.home.HomeFragment
 import com.tasty.recipesapp.ui.profile.ProfileFragment
 import com.tasty.recipesapp.ui.recipe.RecipesFragment
+import com.tasty.recipesapp.viewmodel.SharedRecipeViewModel
 
 class MainActivity : AppCompatActivity() {
     private lateinit var menuTitle: TextView
+    val sharedRecipeViewModel: SharedRecipeViewModel by viewModels()
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {

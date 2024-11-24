@@ -1,0 +1,163 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Recipe Name -->
+        <EditText
+            android:id="@+id/recipe_name_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter Recipe Name"
+            android:textColor="@android:color/white"
+            android:textColorHint="@android:color/white" />
+
+        <!-- Short Description -->
+        <EditText
+            android:id="@+id/short_description_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter Short Description"
+            android:textColor="@android:color/white"
+            android:textColorHint="@android:color/white" />
+
+        <!-- Number of Servings -->
+        <EditText
+            android:id="@+id/servings_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Number of Servings"
+            android:inputType="number"
+            android:textColor="@android:color/white"
+            android:textColorHint="@android:color/white" />
+
+        <!-- Nutrition Section -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nutrition:"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="16dp" />
+
+        <!-- Calories -->
+        <EditText
+            android:id="@+id/calories_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Calories (kcal)"
+            android:inputType="number"
+            android:textColor="@android:color/white"
+            android:textColorHint="@android:color/white" />
+
+        <!-- Protein -->
+        <EditText
+            android:id="@+id/protein_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Protein (g)"
+            android:inputType="numberDecimal"
+            android:textColor="@android:color/white"
+            android:textColorHint="@android:color/white" />
+
+        <!-- Fat -->
+        <EditText
+            android:id="@+id/fat_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Fat (g)"
+            android:inputType="numberDecimal"
+            android:textColor="@android:color/white"
+            android:textColorHint="@android:color/white" />
+
+        <!-- Carbs -->
+        <EditText
+            android:id="@+id/carbs_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Carbs (g)"
+            android:inputType="numberDecimal"
+            android:textColor="@android:color/white"
+            android:textColorHint="@android:color/white" />
+
+        <!-- Sugar -->
+        <EditText
+            android:id="@+id/sugar_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Sugar (g)"
+            android:inputType="numberDecimal"
+            android:textColor="@android:color/white"
+            android:textColorHint="@android:color/white" />
+
+        <!-- Fiber -->
+        <EditText
+            android:id="@+id/fiber_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Fiber (g)"
+            android:inputType="numberDecimal"
+            android:textColor="@android:color/white"
+            android:textColorHint="@android:color/white" />
+
+        <!-- Components Section -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Components:"
+            android:textColor="@android:color/white"
+            android:textColorHint="@android:color/white"
+            android:layout_marginTop="16dp" />
+
+        <LinearLayout
+            android:id="@+id/ingredient_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/add_component_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:src="@drawable/ic_add"
+            android:contentDescription="Add Component" />
+
+        <!-- Instructions Section -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Instructions:"
+            android:textColor="@android:color/white"
+            android:textColorHint="@android:color/white"
+            android:layout_marginTop="16dp" />
+
+        <LinearLayout
+            android:id="@+id/instruction_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/add_instruction_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:src="@drawable/ic_add"
+            android:contentDescription="Add Instruction" />
+
+        <!-- Save Recipe Button -->
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/save_recipe_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:src="@drawable/ic_save"
+            android:contentDescription="Save Recipe" />
+
+    </LinearLayout>
+</ScrollView>

@@ -2,13 +2,11 @@ package com.tasty.recipesapp.adapter
 
 import android.annotation.SuppressLint
 import android.util.Log
-import com.tasty.recipesapp.models.RecipeModel
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-
 import com.tasty.recipesapp.databinding.ItemRecipeBinding
-import com.tasty.recipesapp.databinding.ItemRecipeBinding.*
+import com.tasty.recipesapp.models.RecipeModel
 
 class RecipeAdapter(
     private var recipes: List<RecipeModel> = emptyList(),
@@ -18,12 +16,13 @@ class RecipeAdapter(
     @SuppressLint("NotifyDataSetChanged")
     fun updateRecipes(newRecipes: List<RecipeModel>) {
         recipes = newRecipes
-        notifyDataSetChanged()
+        notifyDataSetChanged()  // A lista frissítése után értesíteni kell az adaptert
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecipeViewHolder {
         Log.d("RecipeAdapter", "onCreateViewHolder")
-        val binding = inflate(
+        // Az inflálás javítása
+        val binding = ItemRecipeBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
             false
@@ -33,7 +32,7 @@ class RecipeAdapter(
 
     override fun onBindViewHolder(holder: RecipeViewHolder, position: Int) {
         Log.d("RecipeAdapter", "onBindViewHolder")
-        holder.bind(recipes[position])
+        holder.bind(recipes[position])  // A recept hozzárendelése a ViewHolderhez
     }
 
     override fun getItemCount(): Int = recipes.size
@@ -45,12 +44,12 @@ class RecipeAdapter(
 
         fun bind(recipe: RecipeModel) {
             binding.apply {
-                recipeName.text = recipe.name
-                recipeDescription.text = recipe.description
-                servingsInfo.text = "Serves ${recipe.servings}"
-                calories.text = "${recipe.nutrition.calories} calories"
+                recipeName.text = recipe.name  // A recept neve
+                recipeDescription.text = recipe.description  // A recept leírása
+                servingsInfo.text = "Serves ${recipe.servings}"  // Adott recept adagszáma
+                calories.text = "${recipe.nutrition.calories} calories"  // Kalória információ
 
-                // Set click listener
+                // Kattintás esemény beállítása
                 root.setOnClickListener { onItemClick(recipe) }
             }
         }
