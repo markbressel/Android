@@ -1,163 +1,288 @@
+<?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:orientation="vertical">
 
-        <!-- Recipe Name -->
-        <EditText
-            android:id="@+id/recipe_name_input"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Enter Recipe Name"
-            android:textColor="@android:color/white"
-            android:textColorHint="@android:color/white" />
+            android:layout_height="wrap_content">
 
-        <!-- Short Description -->
-        <EditText
-            android:id="@+id/short_description_input"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Enter Short Description"
-            android:textColor="@android:color/white"
-            android:textColorHint="@android:color/white" />
+            <ImageView
+                android:id="@+id/recipeImageView"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:scaleType="centerCrop" />
 
-        <!-- Number of Servings -->
-        <EditText
-            android:id="@+id/servings_input"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Number of Servings"
-            android:inputType="number"
-            android:textColor="@android:color/white"
-            android:textColorHint="@android:color/white" />
+            <ProgressBar
+                android:id="@+id/imageLoadingProgress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone"/>
 
-        <!-- Nutrition Section -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Nutrition:"
-            android:textColor="@android:color/white"
-            android:layout_marginTop="16dp" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/selectImageButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textColor="@color/white"
+                app:icon="@android:drawable/ic_menu_camera"
+                app:iconTint="@color/white"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
 
-        <!-- Calories -->
-        <EditText
-            android:id="@+id/calories_input"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Calories (kcal)"
-            android:inputType="number"
-            android:textColor="@android:color/white"
-            android:textColorHint="@android:color/white" />
-
-        <!-- Protein -->
-        <EditText
-            android:id="@+id/protein_input"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Protein (g)"
-            android:inputType="numberDecimal"
-            android:textColor="@android:color/white"
-            android:textColorHint="@android:color/white" />
-
-        <!-- Fat -->
-        <EditText
-            android:id="@+id/fat_input"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Fat (g)"
-            android:inputType="numberDecimal"
-            android:textColor="@android:color/white"
-            android:textColorHint="@android:color/white" />
-
-        <!-- Carbs -->
-        <EditText
-            android:id="@+id/carbs_input"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Carbs (g)"
-            android:inputType="numberDecimal"
-            android:textColor="@android:color/white"
-            android:textColorHint="@android:color/white" />
-
-        <!-- Sugar -->
-        <EditText
-            android:id="@+id/sugar_input"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Sugar (g)"
-            android:inputType="numberDecimal"
-            android:textColor="@android:color/white"
-            android:textColorHint="@android:color/white" />
-
-        <!-- Fiber -->
-        <EditText
-            android:id="@+id/fiber_input"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Fiber (g)"
-            android:inputType="numberDecimal"
-            android:textColor="@android:color/white"
-            android:textColorHint="@android:color/white" />
-
-        <!-- Components Section -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Components:"
-            android:textColor="@android:color/white"
-            android:textColorHint="@android:color/white"
-            android:layout_marginTop="16dp" />
-
+        </FrameLayout>
+        <!-- Content Section -->
         <LinearLayout
-            android:id="@+id/ingredient_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" />
+            android:orientation="vertical"
+            android:padding="16dp">
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/add_component_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:src="@drawable/ic_add"
-            android:contentDescription="Add Component" />
+            <!-- Recipe Basic Info Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardElevation="2dp"
+                app:cardCornerRadius="8dp">
 
-        <!-- Instructions Section -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Instructions:"
-            android:textColor="@android:color/white"
-            android:textColorHint="@android:color/white"
-            android:layout_marginTop="16dp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
-        <LinearLayout
-            android:id="@+id/instruction_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" />
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        >
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/add_instruction_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:src="@drawable/ic_add"
-            android:contentDescription="Add Instruction" />
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/recipeNameInput"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Recipe Name" />
+                    </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Save Recipe Button -->
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/save_recipe_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:src="@drawable/ic_save"
-            android:contentDescription="Save Recipe" />
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        >
 
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/recipeDescriptionInput"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Description"
+                            android:inputType="textMultiLine"
+                            android:minLines="3" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        >
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/servingsInput"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Number of Servings"
+                            android:inputType="number" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Ingredients Section -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardElevation="2dp"
+                app:cardCornerRadius="8dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Ingredients"
+                        android:textStyle="bold"
+                        android:textSize="18sp"
+                        android:layout_marginBottom="16dp" />
+
+                    <LinearLayout
+                        android:id="@+id/ingredientsContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/addIngredientButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Add Ingredient"
+                        android:textColor="@color/white"
+                        app:icon="@android:drawable/ic_menu_add"
+                        app:iconTint="@color/white"
+                        android:layout_marginTop="8dp"
+                        style="@style/Widget.MaterialComponents.Button"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Instructions Section -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardElevation="2dp"
+                app:cardCornerRadius="8dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Instructions"
+                        android:textStyle="bold"
+                        android:textSize="18sp"
+                        android:layout_marginBottom="16dp" />
+
+                    <LinearLayout
+                        android:id="@+id/instructionsContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/addInstructionButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Add Instruction"
+                        android:textColor="@color/white"
+                        app:icon="@android:drawable/ic_menu_add"
+                        app:iconTint="@color/white"
+                        android:layout_marginTop="8dp"
+                        style="@style/Widget.MaterialComponents.Button"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Nutrition Section -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardElevation="2dp"
+                app:cardCornerRadius="8dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Nutrition Information"
+                        android:textStyle="bold"
+                        android:textSize="18sp"
+                        android:layout_marginBottom="16dp" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        >
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/caloriesInput"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Calories"
+                            android:inputType="number" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Protein Input -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        >
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/proteinInput"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Protein (g)"
+                            android:inputType="number" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Fat Input -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        >
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/fatInput"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Fat (g)"
+                            android:inputType="number" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Carbohydrates Input -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        >
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/carbsInput"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Carbohydrates (g)"
+                            android:inputType="number" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/saveRecipeButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Save Recipe"
+                android:textColor="@color/white"
+                android:padding="12dp"
+                app:cornerRadius="8dp"
+                style="@style/Widget.MaterialComponents.Button"/>
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>

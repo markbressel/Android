@@ -1,7 +1,9 @@
 package com.tasty.recipesapp.ui.recipe
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -9,15 +11,15 @@ import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.tasty.recipesapp.R
 import com.tasty.recipesapp.adapter.RecipeAdapter
 import com.tasty.recipesapp.databinding.FragmentRecipesBinding
-import com.tasty.recipesapp.viewmodel.RecipeListViewModel
+import com.tasty.recipesapp.models.RecipeModel
+import com.tasty.recipesapp.viewmodel.ProfileViewModel
 
 class RecipesFragment : Fragment() {
 
-    private val viewModel: RecipeListViewModel by activityViewModels()
+    private val viewModel: ProfileViewModel by activityViewModels()
     private var _binding: FragmentRecipesBinding? = null
     private val binding get() = _binding!!
 
@@ -28,32 +30,43 @@ class RecipesFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentRecipesBinding.inflate(inflater, container, false)
-        return binding.root
+        try {
+            _binding = FragmentRecipesBinding.inflate(inflater, container, false)
+            return binding.root
+        } catch (e: Exception) {
+            Log.e("RecipesFragment", "Error in onCreateView", e)
+            throw e
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        val fabAddRecipe = view.findViewById<FloatingActionButton>(R.id.fab_add_recipe)
-
-        // Kattintási esemény beállítása
-        fabAddRecipe.setOnClickListener {
-            // Navigálás a RecipesFragment-ből a NewRecipeFragment-re
-            findNavController().navigate(R.id.action_recipesFragment_to_newRecipeFragment)
+        try {
+            super.onViewCreated(view, savedInstanceState)
+            setupRecyclerView()
+            observeViewModel()
+            binding.addRecipeButton.setOnClickListener {
+                findNavController().navigate(R.id.action_profileFragment_to_newRecipeFragment)
+            }
+        } catch (e: Exception) {
+            Log.e("RecipesFragment", "Error in onViewCreated", e)
+            Toast.makeText(context, "Error loading recipes: ${e.message}", Toast.LENGTH_LONG).show()
         }
-
-        setupRecyclerView()
-        observeViewModel()
     }
 
     private fun setupRecyclerView() {
-        recipeAdapter = RecipeAdapter { recipe ->
-            // Navigálás a recept részletekhez
-            val directions = RecipesFragmentDirections
-                .actionRecipesFragmentToRecipeDetailFragment(recipeId = recipe.id)
-            findNavController().navigate(directions)
-        }
+        recipeAdapter = RecipeAdapter(
+            onItemClick = { recipe ->
+                val directions = RecipesFragmentDirections
+                    .actionRecipesFragmentToRecipeDetailFragment(recipeId = recipe.id)
+                findNavController().navigate(directions)
+            },
+            onFavoriteClick = { recipe ->
+                viewModel.toggleFavorite(recipe)
+            },
+            onItemLongClick = { recipe ->
+                showDeleteConfirmationDialog(recipe)
+            }
+        )
 
         binding.recyclerView.apply {
             adapter = recipeAdapter
@@ -62,22 +75,32 @@ class RecipesFragment : Fragment() {
     }
 
     private fun observeViewModel() {
-        // Az összes recept figyelése
-        viewModel.recipes.observe(viewLifecycleOwner) { recipes ->
-            recipeAdapter.updateRecipes(recipes)  // Frissíti az adaptert az új listával
+        viewModel.myRecipes.observe(viewLifecycleOwner) { recipes ->
+            recipeAdapter.updateRecipes(recipes)
         }
 
-        // Betöltési indikátor figyelése
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
             binding.loadingIndicator.visibility = if (isLoading) View.VISIBLE else View.GONE
         }
 
-        // Hibák kezelése
         viewModel.error.observe(viewLifecycleOwner) { error ->
             error?.let {
+                Log.e("RecipesFragment", "Error occurred: $it")
                 Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
             }
         }
+    }
+
+    private fun showDeleteConfirmationDialog(recipe: RecipeModel) {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Recept törlése")
+            .setMessage("Biztosan törölni szeretnéd a(z) ${recipe.name} receptet?")
+            .setPositiveButton("Igen") { _, _ ->
+                viewModel.deleteRecipe(recipe)
+                Toast.makeText(context, "Recept törölve", Toast.LENGTH_SHORT).show()
+            }
+            .setNegativeButton("Mégse", null)
+            .show()
     }
 
     override fun onDestroyView() {

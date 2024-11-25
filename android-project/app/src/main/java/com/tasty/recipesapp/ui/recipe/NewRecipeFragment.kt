@@ -1,151 +1,314 @@
 package com.tasty.recipesapp.ui.recipe
 
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.tasty.recipesapp.R
-import com.tasty.recipesapp.database.RecipeDatabase
+import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
+import com.tasty.recipesapp.databinding.FragmentNewRecipeBinding
 import com.tasty.recipesapp.models.ComponentModel
 import com.tasty.recipesapp.models.InstructionModel
 import com.tasty.recipesapp.models.NutritionModel
 import com.tasty.recipesapp.models.RecipeModel
-import com.tasty.recipesapp.repository.RecipeRepository
 import com.tasty.recipesapp.viewmodel.ProfileViewModel
-import com.tasty.recipesapp.viewmodel.ProfileViewModelFactory
+import kotlinx.coroutines.CoroutineStart
+import java.io.ByteArrayOutputStream
+import kotlin.math.sqrt
+import android.Manifest
+import com.tasty.recipesapp.databinding.ItemIngredientInputBinding
+import com.tasty.recipesapp.databinding.ItemInstructionInputBinding
+import android.util.Base64
+
 
 class NewRecipeFragment : Fragment() {
 
-    private val repository: RecipeRepository by lazy {
-        val database = RecipeDatabase.getDatabase(requireContext())
-        RecipeRepository(requireContext(), database.recipeDao())
+    private var _binding: FragmentNewRecipeBinding? = null
+    private val binding get() = _binding!!
+    private val viewModel: ProfileViewModel by activityViewModels()
+
+    private var selectedImageUri: Uri? = null
+
+    // Permission launcher
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            openImagePicker()
+        } else {
+            Toast.makeText(context, "Permission needed for image selection", Toast.LENGTH_SHORT).show()
+        }
     }
 
-    private val viewModel: ProfileViewModel by lazy {
-        ViewModelProvider(this, ProfileViewModelFactory(repository))[ProfileViewModel::class.java]
+    // Image picker launcher
+    private val pickImage = registerForActivityResult(
+        ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let {
+            selectedImageUri = it
+            binding.recipeImageView.setImageURI(it)
+            binding.selectImageButton.text = ""
+        }
     }
-
-    private lateinit var ingredientLayout: LinearLayout
-    private lateinit var instructionLayout: LinearLayout
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val root = inflater.inflate(R.layout.fragment_new_recipe, container, false)
-
-        ingredientLayout = root.findViewById(R.id.ingredient_container)
-        instructionLayout = root.findViewById(R.id.instruction_container)
-
-        // "Add Component" gomb megnyomásakor három mező jelenik meg
-        root.findViewById<FloatingActionButton>(R.id.add_component_button).setOnClickListener {
-            addIngredientFields(ingredientLayout)
-        }
-
-        // "Add Instruction" gomb megnyomásakor csak egy mező jelenik meg
-        root.findViewById<FloatingActionButton>(R.id.add_instruction_button).setOnClickListener {
-            addInstructionField(instructionLayout)
-        }
-
-        // "Save Recipe" gomb működése
-        root.findViewById<FloatingActionButton>(R.id.save_recipe_button).setOnClickListener {
-            saveRecipe()
-        }
-
-        return root
+    ): View {
+        _binding = FragmentNewRecipeBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    // Ez a metódus három mezőt ad hozzá az Ingredient szekcióhoz
-    private fun addIngredientFields(container: LinearLayout) {
-        val ingredientInput = createEditText("Ingredient")
-        val quantityInput = createEditText("Quantity")
-        val unitInput = createEditText("Unit")
-
-        val inputLayout = LinearLayout(requireContext()).apply {
-            orientation = LinearLayout.HORIZONTAL
-            addView(ingredientInput)
-            addView(quantityInput)
-            addView(unitInput)
-        }
-
-        container.addView(inputLayout)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setupButtons()
+        setupImagePicker()
     }
 
-    // Ez a metódus csak egy mezőt ad hozzá az Instruction szekcióhoz
-    private fun addInstructionField(container: LinearLayout) {
-        val instructionInput = createEditText("Instruction")
+    private fun setupButtons() {
+        binding.apply {
+            addIngredientButton.setOnClickListener {
+                addIngredientInput()
+            }
 
-        val inputLayout = LinearLayout(requireContext()).apply {
-            orientation = LinearLayout.HORIZONTAL
-            addView(instructionInput)
+            addInstructionButton.setOnClickListener {
+                addInstructionInput()
+            }
+
+            saveRecipeButton.setOnClickListener {
+                saveRecipe()
+            }
         }
-
-        container.addView(inputLayout)
     }
 
-    // Segédfüggvény, amely létrehoz egy EditText mezőt a kívánt hint-tel
-    private fun createEditText(hint: String): EditText {
-        return EditText(requireContext()).apply {
-            this.hint = hint
-            this.layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+    private fun setupImagePicker() {
+        binding.selectImageButton.setOnClickListener {
+            checkPermissionAndPickImage()
+        }
+
+        binding.recipeImageView.setOnClickListener {
+            checkPermissionAndPickImage()
+        }
+    }
+
+    private fun checkPermissionAndPickImage() {
+        when {
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> {
+                when {
+                    ContextCompat.checkSelfPermission(
+                        requireContext(),
+                        Manifest.permission.READ_MEDIA_IMAGES
+                    ) == PackageManager.PERMISSION_GRANTED -> {
+                        openImagePicker()
+                    }
+                    else -> {
+                        requestPermissionLauncher.launch(Manifest.permission.READ_MEDIA_IMAGES)
+                    }
+                }
+            }
+            else -> {
+                when {
+                    ContextCompat.checkSelfPermission(
+                        requireContext(),
+                        Manifest.permission.READ_EXTERNAL_STORAGE
+                    ) == PackageManager.PERMISSION_GRANTED -> {
+                        openImagePicker()
+                    }
+                    else -> {
+                        requestPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun openImagePicker() {
+        pickImage.launch("image/*")
+    }
+
+    private fun addIngredientInput() {
+        val ingredientBinding = ItemIngredientInputBinding.inflate(
+            layoutInflater,
+            binding.ingredientsContainer,
+            true
+        )
+
+        ingredientBinding.removeIngredientButton.setOnClickListener {
+            binding.ingredientsContainer.removeView(ingredientBinding.root)
+        }
+    }
+
+    private fun addInstructionInput() {
+        val instructionBinding = ItemInstructionInputBinding.inflate(
+            layoutInflater,
+            binding.instructionsContainer,
+            true
+        )
+
+        // Set step number
+        val stepNumber = binding.instructionsContainer.childCount
+        instructionBinding.stepNumberText.text = "$stepNumber."
+
+        instructionBinding.removeInstructionButton.setOnClickListener {
+            binding.instructionsContainer.removeView(instructionBinding.root)
+            updateInstructionNumbers()
+        }
+    }
+
+    private fun updateInstructionNumbers() {
+        for (i in 0 until binding.instructionsContainer.childCount) {
+            val instructionView = binding.instructionsContainer.getChildAt(i)
+            val stepNumberText = instructionView.findViewById<android.widget.TextView>(
+                com.tasty.recipesapp.R.id.stepNumberText
+            )
+            stepNumberText.text = "${i + 1}."
+        }
+    }
+
+    private fun compressAndConvertImageToBase64(uri: Uri): String {
+        return try {
+            binding.imageLoadingProgress.visibility = View.VISIBLE
+
+            val inputStream = requireContext().contentResolver.openInputStream(uri)
+            var bitmap = BitmapFactory.decodeStream(inputStream)
+            inputStream?.close()
+
+            // Compress image if it's too large
+            if (bitmap.byteCount > 1024 * 1024) { // If larger than 1MB
+                val ratio = sqrt(1024 * 1024.0 / bitmap.byteCount)
+                val width = (bitmap.width * ratio).toInt()
+                val height = (bitmap.height * ratio).toInt()
+                bitmap = Bitmap.createScaledBitmap(bitmap, width, height, true)
+            }
+
+            val outputStream = ByteArrayOutputStream()
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream)
+            val bytes = outputStream.toByteArray()
+            Base64.encodeToString(bytes, Base64.DEFAULT)
+        } catch (e: Exception) {
+            Log.e("NewRecipeFragment", "Error compressing image: ${e.message}")
+            ""
+        } finally {
+            binding.imageLoadingProgress.visibility = View.GONE
         }
     }
 
     private fun saveRecipe() {
-        val name = view?.findViewById<EditText>(R.id.recipe_name_input)?.text.toString()
-        val description = view?.findViewById<EditText>(R.id.short_description_input)?.text.toString()
+        try {
+            // Collect basic information
+            val name = binding.recipeNameInput.text.toString()
+            val description = binding.recipeDescriptionInput.text.toString()
+            val servings = binding.servingsInput.text.toString().toIntOrNull() ?: 0
 
-        val ingredients = (0 until ingredientLayout.childCount).map { index ->
-            val inputLayout = ingredientLayout.getChildAt(index) as LinearLayout
-            val ingredientText = (inputLayout.getChildAt(0) as EditText).text.toString()
-            val quantityText = (inputLayout.getChildAt(1) as EditText).text.toString()
-            val unitText = (inputLayout.getChildAt(2) as EditText).text.toString()
+            // Validate basic fields
+            if (name.isBlank() || description.isBlank() || servings == 0) {
+                Toast.makeText(context, "Please fill in all required fields", Toast.LENGTH_SHORT).show()
+                return
+            }
 
-            // Ha szükséges, igazítsd az objektumot
-            val rawText = "$ingredientText $quantityText $unitText"
+            // Collect ingredients
+            val ingredients = mutableListOf<ComponentModel>()
+            for (i in 0 until binding.ingredientsContainer.childCount) {
+                val ingredientView = binding.ingredientsContainer.getChildAt(i)
+                val ingredientInput = ingredientView.findViewById<com.google.android.material.textfield.TextInputEditText>(
+                    com.tasty.recipesapp.R.id.ingredientInput
+                )
+                val amountInput = ingredientView.findViewById<com.google.android.material.textfield.TextInputEditText>(
+                    com.tasty.recipesapp.R.id.amountInput
+                )
 
-            ComponentModel(
-                rawText = rawText,
-                ingredient = ingredientText,
-                amount = quantityText,
-                position = index + 1
+                val ingredient = ingredientInput.text.toString()
+                val amount = amountInput.text.toString()
+
+                if (ingredient.isNotBlank() && amount.isNotBlank()) {
+                    ingredients.add(
+                        ComponentModel(
+                            rawText = "$amount of $ingredient",
+                            ingredient = ingredient,
+                            amount = amount,
+                            position = i + 1
+                        )
+                    )
+                }
+            }
+
+            // Collect instructions
+            val instructions = mutableListOf<InstructionModel>()
+            for (i in 0 until binding.instructionsContainer.childCount) {
+                val instructionView = binding.instructionsContainer.getChildAt(i)
+                val instructionInput = instructionView.findViewById<com.google.android.material.textfield.TextInputEditText>(
+                    com.tasty.recipesapp.R.id.instructionInput
+                )
+
+                val instructionText = instructionInput.text.toString()
+                if (instructionText.isNotBlank()) {
+                    instructions.add(
+                        InstructionModel(
+                            id = i + 1,
+                            text = instructionText,
+                            position = i + 1
+                        )
+                    )
+                }
+            }
+
+            // Collect nutrition information
+            val calories = binding.caloriesInput.text.toString().toIntOrNull() ?: 0
+            val protein = binding.proteinInput.text.toString().toIntOrNull() ?: 0
+            val fat = binding.fatInput.text.toString().toIntOrNull() ?: 0
+            val carbs = binding.carbsInput.text.toString().toIntOrNull() ?: 0
+
+            // Convert image to Base64 if selected
+            val imageString = selectedImageUri?.let { uri ->
+                try {
+                    compressAndConvertImageToBase64(uri)
+                } catch (e: Exception) {
+                    Log.e("NewRecipeFragment", "Error converting image: ${e.message}")
+                    ""
+                }
+            } ?: ""
+
+            // Create recipe model
+            val recipe = RecipeModel(
+                id = System.currentTimeMillis().toInt(),
+                name = name,
+                description = description,
+                thumbnailUrl = imageString,
+                servings = servings,
+                components = ingredients,
+                instructions = instructions,
+                nutrition = NutritionModel(
+                    calories = calories,
+                    protein = protein,
+                    fat = fat,
+                    carbohydrates = carbs
+                )
             )
-        }.filter { it.ingredient.isNotBlank() }
 
-        val instructions = (0 until instructionLayout.childCount).map { index ->
-            val inputField = instructionLayout.getChildAt(index) as LinearLayout
-            val instructionText = (inputField.getChildAt(0) as EditText).text.toString()
-            InstructionModel(
-                id = index + 1,
-                text = instructionText,
-                position = index + 1
-            )
-        }.filter { it.text.isNotBlank() }
+            // Save recipe
+            viewModel.addRecipe(recipe)
+            Toast.makeText(context, "Recipe saved successfully", Toast.LENGTH_SHORT).show()
+            findNavController().navigateUp()
 
-        if (name.isBlank() || description.isBlank()) {
-            Toast.makeText(requireContext(), "Name and description are required!", Toast.LENGTH_SHORT).show()
-            return
+        } catch (e: Exception) {
+            Log.e("NewRecipeFragment", "Error saving recipe: ${e.message}")
+            Toast.makeText(context, "Error saving recipe: ${e.message}", Toast.LENGTH_LONG).show()
         }
+    }
 
-        val recipe = RecipeModel(
-            id = 0,
-            name = name,
-            description = description,
-            thumbnailUrl = "",
-            servings = 4,
-            components = ingredients,
-            instructions = instructions,
-            nutrition = NutritionModel(0, 0, 0, 0)
-        )
-
-        // Ez a sor hívja meg a viewModelt, hogy elmentse a receptet
-        viewModel.insertRecipe(recipe)
-        Toast.makeText(requireContext(), "Recipe saved!", Toast.LENGTH_SHORT).show()
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

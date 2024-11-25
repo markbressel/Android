@@ -7,7 +7,6 @@ import androidx.room.Query
 
 @Dao
 interface RecipeDao {
-
     @Insert
     suspend fun insertRecipe(recipe: RecipeEntity)
 
@@ -19,4 +18,7 @@ interface RecipeDao {
 
     @Delete
     suspend fun deleteRecipe(recipe: RecipeEntity)
+
+    @Query("UPDATE recipe SET json = :json WHERE internalId = :id")
+    suspend fun updateRecipe(id: Long, json: String)
 }

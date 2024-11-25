@@ -15,11 +15,9 @@ import com.tasty.recipesapp.R
 import com.tasty.recipesapp.ui.home.HomeFragment
 import com.tasty.recipesapp.ui.profile.ProfileFragment
 import com.tasty.recipesapp.ui.recipe.RecipesFragment
-import com.tasty.recipesapp.viewmodel.SharedRecipeViewModel
 
 class MainActivity : AppCompatActivity() {
     private lateinit var menuTitle: TextView
-    val sharedRecipeViewModel: SharedRecipeViewModel by viewModels()
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {

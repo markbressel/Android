@@ -5,35 +5,66 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.tasty.recipesapp.R
-import com.tasty.recipesapp.database.RecipeDatabase
-import com.tasty.recipesapp.repository.RecipeRepository
+import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.tasty.recipesapp.adapter.RecipeAdapter
+import com.tasty.recipesapp.databinding.FragmentProfileBinding
+import com.tasty.recipesapp.viewmodel.ProfileViewModel
 
 class ProfileFragment : Fragment() {
 
-    private lateinit var repository: RecipeRepository
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val context = requireContext()
-
-        // Initialize the RecipeDao through RecipeDatabase
-        val recipeDao = RecipeDatabase.getDatabase(context).recipeDao()
-
-        // Initialize the repository with both context and recipeDao
-        repository = RecipeRepository(context, recipeDao)
-    }
+    private var _binding: FragmentProfileBinding? = null
+    private val binding get() = _binding!!
+    private val viewModel: ProfileViewModel by activityViewModels()
+    private lateinit var recipeAdapter: RecipeAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the fragment's layout
-        val root = inflater.inflate(R.layout.fragment_profile, container, false)
+    ): View {
+        _binding = FragmentProfileBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-        // Example usage of the repository
-        // repository.getAllLocalRecipes()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        return root
+        setupRecyclerView()
+        observeViewModel()
+    }
+
+    private fun setupRecyclerView() {
+        recipeAdapter = RecipeAdapter(
+            onItemClick = { recipe ->
+                val directions = ProfileFragmentDirections
+                    .actionProfileFragmentToRecipeDetailFragment(recipeId = recipe.id)
+                findNavController().navigate(directions)
+            },
+            onFavoriteClick = { recipe ->
+                viewModel.toggleFavorite(recipe)
+            },
+            onItemLongClick = { recipe ->
+                // Hosszú nyomásra törlés
+                viewModel.deleteRecipe(recipe)
+            }
+        )
+
+        binding.recyclerView.apply {
+            adapter = recipeAdapter
+            layoutManager = LinearLayoutManager(context)
+        }
+    }
+
+
+    private fun observeViewModel() {
+        viewModel.favorites.observe(viewLifecycleOwner) { recipes ->
+            recipeAdapter.updateRecipes(recipes)
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
