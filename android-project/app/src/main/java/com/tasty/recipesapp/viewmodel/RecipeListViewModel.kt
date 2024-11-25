@@ -42,7 +42,7 @@ class RecipeListViewModel(application: Application) : AndroidViewModel(applicati
     val error: LiveData<String?> = _error
 
     init {
-        //loadRecipes()
+        loadRecipes()
         loadLocalRecipes()
     }
 

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">RecipesApp</string>
+    <string name="app_name">FoodHub</string>
     <string name="recipe_image">Recipe Image</string>
     <string name="go_to_main_activity">Go to Main Activity</string>
     <string name="clicked">Clicked</string>

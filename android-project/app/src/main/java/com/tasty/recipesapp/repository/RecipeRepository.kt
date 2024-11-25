@@ -42,7 +42,7 @@ class RecipeRepository(
     private fun readRecipesFromJson(): List<RecipeDTO> {
         try {
             val jsonString = context.assets
-                .open("recipe_details.json")
+                .open("recipes.json")
                 .bufferedReader()
                 .use { it.readText() }
 

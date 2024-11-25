@@ -11,6 +11,9 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.tasty.recipesapp.R
 import com.tasty.recipesapp.databinding.ActivitySplashBinding
+import android.view.animation.AnimationUtils
+import android.widget.ImageView
+
 
 class SplashActivity : AppCompatActivity() {
 
@@ -48,6 +51,11 @@ class SplashActivity : AppCompatActivity() {
         val binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Animáció alkalmazása a logóra
+        val logo = findViewById<ImageView>(R.id.logo)
+        val animation = AnimationUtils.loadAnimation(this, R.anim.logo_animation)
+        logo.startAnimation(animation)
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -59,6 +67,6 @@ class SplashActivity : AppCompatActivity() {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             finish()
-        }, 3000)
+        }, 3000) // 3 másodperc várakozás az animáció után
     }
 }
