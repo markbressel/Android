@@ -5,16 +5,12 @@ import android.util.Log
 import com.google.gson.Gson
 import com.tasty.recipesapp.database.RecipeDao
 import com.tasty.recipesapp.database.RecipeEntity
-import com.tasty.recipesapp.dto.ComponentDTO
-import com.tasty.recipesapp.dto.InstructionDTO
-import com.tasty.recipesapp.dto.NutritionDTO
-import com.tasty.recipesapp.dto.RecipeDTO
-import com.tasty.recipesapp.models.ComponentModel
-import com.tasty.recipesapp.models.InstructionModel
-import com.tasty.recipesapp.models.NutritionModel
-import com.tasty.recipesapp.models.RecipeModel
+import com.tasty.recipesapp.dto.*
+import com.tasty.recipesapp.models.*
+import com.tasty.recipesapp.api.RetrofitClient
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.json.JSONObject
-
 import java.io.IOException
 
 class RecipeRepository(
@@ -22,19 +18,43 @@ class RecipeRepository(
     private val recipeDao: RecipeDao
 ) {
     private val gson = Gson()
+    private val apiClient = RetrofitClient.recipeService
 
-    // Original JSON functions
+    // Fetch recipes from API
+    suspend fun getRecipesFromApi(): List<RecipeModel> {
+        return try {
+            val response = apiClient.getRecipes()
+            response.map { it.toModel() } // Map DTOs to RecipeModel
+        } catch (e: Exception) {
+            Log.e("Repository", "Error fetching recipes from API: ${e.message}")
+            emptyList() // Return empty list in case of failure
+        }
+    }
+
+    // Fetch recipe details by ID from API
+    suspend fun getRecipeDetailsFromApi(id: Int): RecipeModel? {
+        return try {
+            val response = apiClient.getRecipeDetails(id)
+            response.toModel() // Map DTO to RecipeModel
+        } catch (e: Exception) {
+            Log.e("Repository", "Error fetching recipe details from API: ${e.message}")
+            null
+        }
+    }
+
+    // Original JSON functions (retain these for local JSON handling)
     suspend fun getAllRecipes(): List<RecipeModel> {
         return readRecipesFromJson().map { it.toModel() }
     }
 
+    // Toggle favorite status for a recipe
     suspend fun toggleFavorite(recipe: RecipeModel) {
         val updatedRecipe = recipe.copy(isFavorite = !recipe.isFavorite)
         val recipeJson = gson.toJson(updatedRecipe)
         recipeDao.updateRecipe(recipe.id.toLong(), recipeJson)
     }
 
-    // Add function to get favorites
+    // Get all favorite recipes
     suspend fun getFavoriteRecipes(): List<RecipeModel> {
         return getAllLocalRecipes().filter { it.isFavorite }
     }
@@ -60,7 +80,7 @@ class RecipeRepository(
         }
     }
 
-    // New Room database functions
+    // Room database functions
     suspend fun insertRecipe(recipe: RecipeModel) {
         try {
             val recipeJson = gson.toJson(recipe)
@@ -69,7 +89,6 @@ class RecipeRepository(
             Log.d("Repository", "Recipe inserted successfully")
         } catch (e: Exception) {
             Log.e("Repository", "Error inserting recipe: ${e.message}")
-            Log.e("Repository", "Recipe data: $recipe")
             throw e
         }
     }
@@ -78,13 +97,10 @@ class RecipeRepository(
         return try {
             recipeDao.getAllRecipes().map { entity ->
                 try {
-                    // Directly parse to RecipeModel since that's what we stored
                     val recipe = gson.fromJson(entity.json, RecipeModel::class.java)
-                    // Update the id from the entity
                     recipe.copy(id = entity.internalId.toInt())
                 } catch (e: Exception) {
                     Log.e("Repository", "Error parsing recipe JSON for id ${entity.internalId}: ${e.message}")
-                    Log.e("Repository", "JSON content: ${entity.json}")
                     throw e
                 }
             }
@@ -107,7 +123,7 @@ class RecipeRepository(
         recipeDao.deleteRecipe(RecipeEntity(recipe.id.toLong(), recipeJson))
     }
 
-    // Your existing mapping functions
+    // Mapping functions
     private fun RecipeDTO.toModel(): RecipeModel {
         return RecipeModel(
             id = this.recipeID,
