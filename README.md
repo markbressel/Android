@@ -7,6 +7,7 @@
 | E2  | 10  |
 | Kavg  | 9.67  |
 | A1  | 9.5  |
+| A2  | 10  |
 
 # Android University Course Project Template
 
