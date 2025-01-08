@@ -1,5 +1,6 @@
-package com.tasty.recipesapp.database
+package com.tasty.recipesapp.entity
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
@@ -8,6 +9,8 @@ import com.google.gson.annotations.SerializedName
 data class RecipeEntity(
     @PrimaryKey(autoGenerate = true)
     val internalId: Long = 0L,
-    @SerializedName("recipes")
-    val json : String
+    @ColumnInfo(name = "recipe_id")
+    val recipeId: Int,
+    @ColumnInfo(name = "json_data")
+    val json: String
 )

@@ -1,0 +1,34 @@
+package com.tasty.recipesapp.api.service
+
+import com.tasty.recipesapp.api.dto.ApiRecipeDTO
+import retrofit2.http.Body
+import retrofit2.http.DELETE
+import retrofit2.http.GET
+import retrofit2.http.Header
+import retrofit2.http.POST
+import retrofit2.http.Path
+
+interface RecipeService {
+    @GET("api/recipes")
+    suspend fun getRecipes(): List<ApiRecipeDTO>
+
+    @GET("api/recipes/{id}")
+    suspend fun getRecipeById(@Path("id") recipeId: Int): ApiRecipeDTO
+
+    @POST("api/recipes")
+    suspend fun addRecipe(
+        @Header("Authorization") authorization: String,
+        @Body recipe: ApiRecipeDTO
+    ): ApiRecipeDTO
+
+    @GET("api/recipes/my")
+    suspend fun getMyRecipes(
+        @Header("Authorization") authorization: String
+    ): List<ApiRecipeDTO>
+
+    @DELETE("api/recipes/{id}")
+    suspend fun deleteRecipe(
+        @Header("Authorization") authorization: String,
+        @Path("id") recipeId: Int
+    )
+}
