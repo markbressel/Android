@@ -135,7 +135,7 @@ class NewRecipeFragment : Fragment() {
                 thumbnailUrl = imageUrl,
                 keywords = keywords,
                 isPublic = true,
-                userEmail = "orosz.krisztian@student.ms.sapientia.ro",
+                userEmail = "markbressel@gmail.com",
                 originalVideoUrl = "",
                 country = "RO",
                 numServings = servings,

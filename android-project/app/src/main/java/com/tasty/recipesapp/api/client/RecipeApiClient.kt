@@ -66,7 +66,7 @@ class RecipeApiClient {
             val response = recipeService.getMyRecipes(token)
 
             // Filter recipes to ensure they belong to the authorized user
-            val filteredRecipes = response.filter { it.userEmail == "orosz.krisztian@student.ms.sapientia.ro" }
+            val filteredRecipes = response.filter { it.userEmail == "markbressel@gmail.com"}
 
             // Check if filtered recipes are empty (unauthorized recipes found)
             if (filteredRecipes.isEmpty()) {
